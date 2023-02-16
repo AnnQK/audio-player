@@ -1,0 +1,47 @@
+.box {
+    background-color: #000000;
+    width: 400px;
+    height: 700px;
+}
+
+.range {
+    margin-top: auto;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 300px;
+    height: 8px;
+    background: #E6E6E6;
+    border-radius: 4px;
+    background-image: linear-gradient(90deg, #F6E226 -1.81%, #E53262 101.81%);
+    background-size: 10%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #730000 0%, #FA3A74 100%);
+    cursor: pointer;
+}
+
+.range::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    width: 8px;
+    background: linear-gradient(180deg, #730000 0%, #FA3A74 100%);
+    cursor: pointer;
+    border: none;
+}
+
+.range::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+}
