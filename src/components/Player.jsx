@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import style from "./Player.module.scss";
 
 function Player() {
-    const [duration, setDuration] = useState(0);
+    const [songsList, setSongsList] = useState([]);
     const [audioInfo, setAudioInfo] = useState({});
     const [isPlaying, setIsPlaying] = useState(null);
     const [elapsed, setElapsed] = useState(0)
@@ -10,11 +10,12 @@ function Player() {
     const intervalRef = useRef(null);
 
     const changeTiming = (e) => {
-        if (audioRef.current) {
-            audioRef.current.currentTime = e.target.value
-            const _elapsed = Math.floor(audioRef?.current?.currentTime);
-            setElapsed(_elapsed);
+        if (!audioRef.current) {
+            return
         }
+        audioRef.current.currentTime = e.target.value
+        const _elapsed = Math.floor(audioRef?.current?.currentTime);
+        setElapsed(_elapsed);
     }
 
     const playAudio = () => {
@@ -53,11 +54,27 @@ function Player() {
         }
     }, [isPlaying])
 
+    const skipHandler = (direction) => {
+        if (isPlaying) {
+            stopAudio();
+        }
+        const activeIdx = songsList.findIndex(item => item.id === audioInfo.id);
+        let nextIdx = activeIdx + (direction === "next" ? 1 : -1);
+        if (nextIdx < 0) nextIdx = songsList.length - 1;
+        if (nextIdx === songsList.length) nextIdx = 0;
+        setAudioInfo(songsList[nextIdx]);
+        if (isPlaying) {
+            setTimeout(() => {
+                playAudio();
+            }, 500);
+        }
+    }
+
     useEffect(() => {
         async function getSong() {
-            const { data } = await fetch("https://saavn.me/songs?link=https://www.jiosaavn.com/song/thunderclouds/RT8zcBh9eUc").then(res => res.json())
-            setAudioInfo(data[0])
-            console.log(data[0])
+            const res = await fetch("https://songs-db.vercel.app/songs").then(res => res.json())
+            setSongsList(res);
+            setAudioInfo(res[0])
         }
         getSong()
     }, [])
@@ -67,34 +84,32 @@ function Player() {
             <div className={style.display}>
                 <div className={style.info}>
                     <h2 className={style.title}>
-                        {audioInfo?.name}
+                        {audioInfo?.title}
                     </h2>
-                    <h4 className={style.artist}>
-                        {audioInfo?.primaryArtists}
-                    </h4>
+                    <h3 className={style.artist}>
+                        {audioInfo?.artist}
+                    </h3>
                 </div>
             </div>
             <div className={style.btnWrapper}>
-                <button onClick={playAudio} className={`${style.btn} ${isPlaying ? style.active : ""}`} >
-                    <img src={"assets/icons/play_icon.svg"} className={style.icon} />
+                <button onClick={playAudio} className={`${style.btn} ${isPlaying ? style.active : ""}`} type="button">
+                    <img src={"assets/icons/play_icon.svg"} className={style.icon} alt="controls play icon" />
                 </button>
-                <button onClick={pauseAudio} className={`${style.btn} ${!isPlaying && audioRef?.current?.currentTime !== 0 ? style.active : ""}`}>
-                    <img src={"assets/icons/pause_icon.svg"} className={style.icon} />
+                <button onClick={pauseAudio} className={`${style.btn} ${!isPlaying && audioRef?.current?.currentTime !== 0 ? style.active : ""}`} type="button">
+                    <img src={"assets/icons/pause_icon.svg"} className={style.icon} alt="controls icon" />
                 </button>
-                <button onClick={stopAudio} className={style.btn}>
-                    <img src={"assets/icons/stop_icon.svg"} className={style.icon} />
+                <button onClick={stopAudio} className={style.btn} type="button">
+                    <img src={"assets/icons/stop_icon.svg"} className={style.icon} alt="controls pause icon" />
                 </button>
-                <button className={style.btn}>
-                    <img src={"assets/icons/skip_icon.svg"} className={style.icon} />
+                <button className={style.btn} onClick={() => skipHandler("prev")} type="button">
+                    <img src={"assets/icons/skip_icon.svg"} className={style.icon} alt="controls prev icon" />
                 </button>
-                <button className={style.btn}>
-                    <img src={"assets/icons/skip_icon.svg"} className={style.icon} />
+                <button className={style.btn} onClick={() => skipHandler("next")} type="button">
+                    <img src={"assets/icons/skip_icon.svg"} className={style.icon} alt="controls next icon" />
                 </button>
             </div>
             <div className={style.player}>
-                <audio ref={audioRef} src={audioInfo.downloadUrl && audioInfo.downloadUrl[1].link} onLoadedData={(e) => {
-                    setDuration(e.currentTarget.duration.toFixed(2))
-                }} />
+                <audio ref={audioRef} src={audioInfo?.song_url} />
                 <input
                     type="range"
                     className={`${style.range} ${!elapsed ? style.empty : ""}`}
