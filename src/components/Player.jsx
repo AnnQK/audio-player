@@ -4,24 +4,39 @@ import style from "./Player.module.scss";
 function Player() {
     const [duration, setDuration] = useState(0);
     const [audioInfo, setAudioInfo] = useState({});
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(null);
     const [elapsed, setElapsed] = useState(0)
     const audioRef = useRef(null);
     const intervalRef = useRef(null);
 
     const changeTiming = (e) => {
-        if (isPlaying) {
+        if (audioRef.current) {
             audioRef.current.currentTime = e.target.value
+            const _elapsed = Math.floor(audioRef?.current?.currentTime);
+            setElapsed(_elapsed);
         }
     }
 
-    const togglePlay = () => {
-        if (isPlaying) {
-            setIsPlaying(false);
-            audioRef.current.pause();
-        } else {
+    const playAudio = () => {
+        if (audioRef.current) {
             setIsPlaying(true);
-            audioRef.current.play();
+            audioRef.current.play()
+        }
+    }
+
+    const pauseAudio = () => {
+        if (audioRef.current) {
+            setIsPlaying(false);
+            audioRef.current.pause()
+        }
+    }
+
+    const stopAudio = () => {
+        if (audioRef.current) {
+            setIsPlaying(null);
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            setElapsed(0)
         }
     }
 
@@ -46,6 +61,7 @@ function Player() {
         }
         getSong()
     }, [])
+
     return (
         <div className={style.container}>
             <div className={style.display}>
@@ -59,13 +75,13 @@ function Player() {
                 </div>
             </div>
             <div className={style.btnWrapper}>
-                <button className={style.btn}>
+                <button onClick={playAudio} className={`${style.btn} ${isPlaying ? style.active : ""}`} >
                     <img src={"assets/icons/play_icon.svg"} className={style.icon} />
                 </button>
-                <button className={style.btn}>
+                <button onClick={pauseAudio} className={`${style.btn} ${!isPlaying && audioRef?.current?.currentTime !== 0 ? style.active : ""}`}>
                     <img src={"assets/icons/pause_icon.svg"} className={style.icon} />
                 </button>
-                <button className={style.btn}>
+                <button onClick={stopAudio} className={style.btn}>
                     <img src={"assets/icons/stop_icon.svg"} className={style.icon} />
                 </button>
                 <button className={style.btn}>
