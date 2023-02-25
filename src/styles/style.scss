@@ -1,3 +1,22 @@
 body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'IBM Plex Mono', monospace;
+    width: 100vw;
+    height: 100vh;
+    background-color: #839AD6;
+}
+
+#root {
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+@media screen and (max-width:480px) {
+    body {
+        display: block;
+    }
 }
