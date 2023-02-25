@@ -18,5 +18,6 @@ body {
 @media screen and (max-width:480px) {
     body {
         display: block;
+        overflow: hidden;
     }
 }

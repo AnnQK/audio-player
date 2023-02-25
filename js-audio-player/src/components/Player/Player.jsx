@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+import Display from "../Display/Display";
+import Loader from "../AudioAnimation/AudioAnimation";
 import style from "./Player.module.scss";
 
 function Player() {
@@ -41,20 +43,7 @@ function Player() {
         }
     }
 
-    useEffect(() => {
-        if (isPlaying) {
-            intervalRef.current = setInterval(() => {
-                const _elapsed = Math.floor(audioRef?.current?.currentTime);
-                setElapsed(_elapsed);
-            }, 100);
-        }
-
-        return () => {
-            clearInterval(intervalRef.current)
-        }
-    }, [isPlaying])
-
-    const skipHandler = (direction) => {
+    const skipAudio = (direction) => {
         if (isPlaying) {
             stopAudio();
         }
@@ -71,6 +60,19 @@ function Player() {
     }
 
     useEffect(() => {
+        if (isPlaying) {
+            intervalRef.current = setInterval(() => {
+                const _elapsed = Math.floor(audioRef?.current?.currentTime);
+                setElapsed(_elapsed);
+            }, 100);
+        }
+
+        return () => {
+            clearInterval(intervalRef.current)
+        }
+    }, [isPlaying])
+
+    useEffect(() => {
         async function getSong() {
             const res = await fetch("https://songs-db.vercel.app/songs").then(res => res.json())
             setSongsList(res);
@@ -81,16 +83,7 @@ function Player() {
 
     return (
         <div className={style.container}>
-            <div className={style.display}>
-                <div className={style.info}>
-                    <h2 className={style.title}>
-                        {audioInfo?.title}
-                    </h2>
-                    <h3 className={style.artist}>
-                        {audioInfo?.artist}
-                    </h3>
-                </div>
-            </div>
+            <Display title={audioInfo?.title} artist={audioInfo?.artist} />
             <div className={style.btnWrapper}>
                 <button onClick={playAudio} className={`${style.btn} ${isPlaying ? style.active : ""}`} type="button">
                     <img src={"assets/icons/play_icon.svg"} className={style.icon} alt="controls play icon" />
@@ -101,10 +94,10 @@ function Player() {
                 <button onClick={stopAudio} className={style.btn} type="button">
                     <img src={"assets/icons/stop_icon.svg"} className={style.icon} alt="controls pause icon" />
                 </button>
-                <button className={style.btn} onClick={() => skipHandler("prev")} type="button">
+                <button className={style.btn} onClick={() => skipAudio("prev")} type="button">
                     <img src={"assets/icons/skip_icon.svg"} className={style.icon} alt="controls prev icon" />
                 </button>
-                <button className={style.btn} onClick={() => skipHandler("next")} type="button">
+                <button className={style.btn} onClick={() => skipAudio("next")} type="button">
                     <img src={"assets/icons/skip_icon.svg"} className={style.icon} alt="controls next icon" />
                 </button>
             </div>
