@@ -6,7 +6,9 @@ const RangeInput = forwardRef((props, ref) => {
     return (
         <div className={style.player}>
             <audio ref={ref} src={song_url} />
+            <label className={style.label} htmlFor="range">Audio timeline</label>
             <input
+                id="range"
                 type="range"
                 className={`${style.range} ${!elapsed ? style.empty : ""}`}
                 value={elapsed}

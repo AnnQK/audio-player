@@ -8,6 +8,11 @@
     box-sizing: border-box;
 }
 
+.label {
+    position: absolute;
+    opacity: 0;
+}
+
 .range {
     margin: 0;
     -webkit-appearance: none;

@@ -3,13 +3,13 @@ import Display from "../Display/Display";
 import style from "./Player.module.scss";
 import RangeInput from "../RangeInput/RangeInput";
 
-function Player() {
-    const [songsList, setSongsList] = useState([]);
-    const [audioInfo, setAudioInfo] = useState({});
-    const [isPlaying, setIsPlaying] = useState(null);
+function Player({ songsList = [] }) {
+    const [audioInfo, setAudioInfo] = useState(songsList[0]);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [elapsed, setElapsed] = useState(0)
     const audioRef = useRef(null);
     const intervalRef = useRef(null);
+
 
     const changeTiming = (e) => {
         if (!audioRef.current) {
@@ -71,15 +71,6 @@ function Player() {
             clearInterval(intervalRef.current)
         }
     }, [isPlaying])
-
-    useEffect(() => {
-        async function getSong() {
-            const res = await fetch("https://songs-db.vercel.app/songs").then(res => res.json())
-            setSongsList(res);
-            setAudioInfo(res[0])
-        }
-        getSong()
-    }, [])
 
     return (
         <div className={style.container}>
