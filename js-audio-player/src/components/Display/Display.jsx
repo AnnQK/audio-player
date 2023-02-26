@@ -1,7 +1,7 @@
 import AudioAnimation from "../AudioAnimation/AudioAnimation";
 import style from "./Display.module.scss";
 
-function Display({ title, artist }) {
+function Display({ title, artist, isPlaying }) {
     return (
         <div className={style.display}>
             <div className={style.info}>
@@ -12,7 +12,7 @@ function Display({ title, artist }) {
                     {artist}
                 </h3>
             </div>
-            <AudioAnimation />
+            <AudioAnimation isPlaying={isPlaying} />
         </div>
     );
 }

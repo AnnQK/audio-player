@@ -1,8 +1,8 @@
 import style from "./AudioAnimation.module.scss";
 
-function AudioAnimation() {
+function AudioAnimation({ isPlaying }) {
     return (
-        <div className={style.middle}>
+        <div className={`${style.middle} ${!isPlaying ? style.pause : ""}`}>
             <div className={`${style.bar} ${style.bar1}`}></div>
             <div className={`${style.bar} ${style.bar2}`}></div>
             <div className={`${style.bar} ${style.bar3}`}></div>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Display from "../Display/Display";
-import Loader from "../AudioAnimation/AudioAnimation";
 import style from "./Player.module.scss";
+import RangeInput from "../RangeInput/RangeInput";
 
 function Player() {
     const [songsList, setSongsList] = useState([]);
@@ -83,7 +83,7 @@ function Player() {
 
     return (
         <div className={style.container}>
-            <Display title={audioInfo?.title} artist={audioInfo?.artist} />
+            <Display title={audioInfo?.title} artist={audioInfo?.artist} isPlaying={isPlaying} />
             <div className={style.btnWrapper}>
                 <button onClick={playAudio} className={`${style.btn} ${isPlaying ? style.active : ""}`} type="button">
                     <img src={"assets/icons/play_icon.svg"} className={style.icon} alt="controls play icon" />
@@ -101,17 +101,7 @@ function Player() {
                     <img src={"assets/icons/skip_icon.svg"} className={style.icon} alt="controls next icon" />
                 </button>
             </div>
-            <div className={style.player}>
-                <audio ref={audioRef} src={audioInfo?.song_url} />
-                <input
-                    type="range"
-                    className={`${style.range} ${!elapsed ? style.empty : ""}`}
-                    value={elapsed}
-                    onChange={e => changeTiming(e)}
-                    max={100}
-                    step={1}
-                    style={{ background: `linear-gradient(to right, #0000FF ${elapsed}%, #121212 ${elapsed}%)` }} />
-            </div>
+            <RangeInput ref={audioRef} elapsed={elapsed} changeTiming={changeTiming} song_url={audioInfo?.song_url} />
         </div>
     );
 }

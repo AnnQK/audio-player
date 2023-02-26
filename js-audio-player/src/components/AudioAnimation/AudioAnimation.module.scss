@@ -3,6 +3,12 @@
     align-items: flex-end;
     justify-content: center;
     width: 50%;
+
+    &.pause {
+        .bar {
+            animation-play-state: paused;
+        }
+    }
 }
 
 .bar {
