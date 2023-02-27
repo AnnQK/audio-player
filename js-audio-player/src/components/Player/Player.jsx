@@ -79,7 +79,7 @@ function Player({ songsList = [] }) {
                 <button onClick={playAudio} className={`${style.btn} ${isPlaying ? style.active : ""}`} type="button">
                     <img src={"assets/icons/play_icon.svg"} className={style.icon} alt="controls play icon" />
                 </button>
-                <button onClick={pauseAudio} className={`${style.btn} ${!isPlaying && audioRef?.current?.currentTime !== 0 ? style.active : ""}`} type="button">
+                <button onClick={pauseAudio} className={`${style.btn} ${!isPlaying && audioRef.current && audioRef.current.currentTime !== 0 ? style.active : ""}`} type="button">
                     <img src={"assets/icons/pause_icon.svg"} className={style.icon} alt="controls icon" />
                 </button>
                 <button onClick={stopAudio} className={style.btn} type="button">
